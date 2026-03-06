@@ -18,7 +18,7 @@ body {
 }
 h1 {
   font-family: 'Fredoka One', cursive;
-  font-size: 2.8rem;
+  font-size: clamp(1.6rem, 6vw, 2.8rem);
   color: #FF6B9D;
   text-shadow: 3px 3px 0 #FFB3D1;
   margin-bottom: 4px;
@@ -30,17 +30,18 @@ h1 {
 }
 .sub {
   color: #B8A8CC;
-  font-size: 0.8rem;
+  font-size: clamp(0.6rem, 2.5vw, 0.8rem);
   font-weight: 800;
   letter-spacing: 2px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .wrapper {
   background: white;
-  border-radius: 24px;
-  padding: 12px 12px 8px;
+  border-radius: 20px;
+  padding: 10px 10px 6px;
   box-shadow: 0 6px 0 #FFD6E8, 0 12px 40px rgba(255,107,157,0.15);
   border: 3px solid #FFE0EE;
+  width: min(96vw, 720px);
 }
 .scorebar {
   display: flex;
@@ -51,7 +52,7 @@ h1 {
 .sc-label { font-size: 0.55rem; color: #CCC; letter-spacing: 1px; font-family:'Nunito',sans-serif; font-weight:800; }
 .sc-val { font-size: 1.3rem; color: #7B68EE; }
 .sc-best { color: #FF6B9D; }
-canvas { border-radius: 12px; display: block; }
+canvas { border-radius: 12px; display: block; width: 100%; height: auto; }
 .hint { text-align:center; padding: 8px 0 2px; color:#CCC; font-size:0.72rem; font-weight:800; }
 </style>
 </head>
@@ -78,7 +79,18 @@ const tepia = new Image();
 tepia.crossOrigin = 'anonymous';
 tepia.src = 'https://raw.githubusercontent.com/fukkunaga/tepia-game/main/tepian01.png';
 
-const GW = 680, GH = 210;
+// Responsive: base canvas is 680x210, CSS scaled to fit screen width
+const BASE_W = 680, BASE_H = 210;
+function resizeCanvas() {
+  const maxW = Math.min(window.innerWidth * 0.94, 720) - 26;
+  const scale = maxW / BASE_W;
+  canvas.style.width = (BASE_W * scale) + 'px';
+  canvas.style.height = (BASE_H * scale) + 'px';
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const GW = BASE_W, GH = BASE_H;
 const GROUND = 160;
 const GRAVITY = 0.55;
 const JUMP_POWER = -13;
